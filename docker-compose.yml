@@ -1,0 +1,30 @@
+version: "3.7"
+
+services:
+  wallet:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./wallet_system:/wallet_system
+    command: >
+      sh -c "python manage.py makemigrations &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000 --insecure"
+    env_file:
+      - wallet_system/.env
+    restart: on-failure
+    depends_on:
+      - wallet_db
+
+  wallet_db:
+    image: postgres:10-alpine
+    volumes:
+      - wallet_database:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=wallet_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=P)A`f76h<R)QmVp.
+volumes:
+  wallet_database:
